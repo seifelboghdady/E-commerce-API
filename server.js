@@ -2,6 +2,7 @@ import { raw } from 'express';
 import { Sequelize, DataTypes, Model, json, Op, where } from 'sequelize';
 
 
+
 //Passing parameters separately (sqlite)
 //Disable SQL logging in the console to keep the output clean.
 const sequelize = new Sequelize('sqlite::memory:',{logging: false});
@@ -12,23 +13,42 @@ BOOK.init(
     {
         title: {
             type: DataTypes.STRING,
-            allowNull : false
+            allowNull : false,
+            get(){
+                const rawdata = this.getDataValue('title');
+                return rawdata? rawdata.toUpperCase(): null;
+            },
+            validate:{
+                noForbidden(value){
+                    if(value.includes('Forbidden')){
+                        throw new Error("Title cannot contain the word 'Forbidden'");
+                    }
+                }
+            }
         },
         author:{
             type: DataTypes.STRING,
             defaultValue: "Unknown Author",
-            //we want return every member in uppercase
-            get(){
-                const rowdata = this.getDataValue('auther');
-                return rowdata? rowdata.toUpperCase(): null;
+            set(val){
+                this.setDataValue('author',val.trim());
             }
+            //we want return every member in uppercase
         },
         pages:{
-            type: DataTypes.INTEGER
+            type: DataTypes.INTEGER,
+            validate:{
+                min:10
+            }
         },
         isAvailable:{
             type: DataTypes.BOOLEAN,
             defaultValue: true
+        },
+        shortDescription:{
+            type: DataTypes.VIRTUAL,
+            get(){
+                return `Title is ${this.title} by Author ${this.author} `;
+            }
         }
     },{sequelize, timestamps: false}
 );
@@ -43,14 +63,24 @@ BOOK.init(
         console.error('Unable to connect to the database:', error);
     }
     
+try {
     
-const book1 = await BOOK.create({title: 'Node.js Guide', author: 'John Doe', pages :200});
-const book2= await BOOK.create({author: "Jane Smith" ,title : 'Sequelize Master', pages :150});
-const book3= await BOOK.create({title : 'Database Design', pages :300});
+    const book1 = await BOOK.create({title: 'Node.js Guide', author: 'John Doe', pages :200});
+    const book2= await BOOK.create({author: "Jane Smith" ,title : 'Sequelize Master', pages :150});
+    const book3= await BOOK.create({title : 'Database Design', pages :300});
+    const book4 = await BOOK.create({title:'Cashing StraTegies'});
+    const book5= await BOOK.create({author: "Jane tramb" ,title : 'Prompt Engineering Forbidden', pages :150});
+    
+    console.log(book1.author);
+    console.log(book2.author);
+    console.log(book3.author);
+    
+    console.log(book4.title);
 
-console.log(book1.author);
-console.log(book2.author);
-console.log(book3.author);
+} catch (error) {
+   console.log(error.message); 
+    
+}    
 
 
 // // }    
