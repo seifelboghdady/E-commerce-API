@@ -1,5 +1,5 @@
 import { raw } from 'express';
-import { Sequelize, DataTypes, Model, json, Op, where } from 'sequelize';
+import { Sequelize, DataTypes, Model, json, Op, where, QueryTypes } from 'sequelize';
 
 
 
@@ -50,7 +50,7 @@ BOOK.init(
                 return `Title is ${this.title} by Author ${this.author} `;
             }
         }
-    },{sequelize, timestamps: false}
+    },{sequelize, timestamps: false, modelName:'Books',tableName:'Books'}
 );
 
 // async function StartApp(){
@@ -69,13 +69,42 @@ try {
     const book2= await BOOK.create({author: "Jane Smith" ,title : 'Sequelize Master', pages :150});
     const book3= await BOOK.create({title : 'Database Design', pages :300});
     const book4 = await BOOK.create({title:'Cashing StraTegies'});
-    const book5= await BOOK.create({author: "Jane tramb" ,title : 'Prompt Engineering Forbidden', pages :150});
-    
+    const book5= await BOOK.create({author: "Jane tramb" ,title : 'Prompt Engineering', pages :140, isAvailable: false});
+    console.log('tableName =', BOOK.getTableName());
     console.log(book1.author);
     console.log(book2.author);
     console.log(book3.author);
-    
     console.log(book4.title);
+    console.log();
+    
+    const getall = await sequelize.query('SELECT * FROM Books',{
+        type : QueryTypes.SELECT
+    });
+    console.log(getall);
+
+    const status = false
+    const testQuery = await sequelize.query(`SELECT * FROM Books WHERE isAvailable =$status`,
+        {
+        bind: {status: status},
+        type: QueryTypes.SELECT
+    });
+
+    console.log(JSON.stringify(testQuery));
+    
+
+
+
+
+    
+    // const [res, meta] = await sequelize.query("SELECT * FROM Books WHERE title = 'Node.js Guide'");
+    // const [res, meta] = await sequelize.query("UPDATE Books SET title = 'Node.js Guide' WHERE pages < 160");
+    // console.log(res);
+    // console.log(meta);
+    
+    // console.log(JSON.stringify(book2));
+    // console.log(JSON.stringify(book5));
+
+    
 
 } catch (error) {
    console.log(error.message); 
