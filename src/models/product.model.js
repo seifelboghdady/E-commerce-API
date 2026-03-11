@@ -15,13 +15,8 @@ Product
 - createdAt
 */
 
-import { DataTypes, Model, Sequelize } from "sequelize";
-
-const sequelize = new Sequelize({
-    dialect: 'sqlite',
-    storage: 'Database.sqlite',
-    logging: false
-});
+import { DataTypes, Model } from "sequelize";
+import sequelize from "../config/sequelize";
 
 class Product extends Model{}
 
@@ -45,7 +40,6 @@ Product.init({
         allowNull: true
     }
 
-},{sequelize, createdAt: 'createdAt'});
+},{sequelize, timestamps: true});
 
-
-module.exports = Product;
+module.exports =  Product;

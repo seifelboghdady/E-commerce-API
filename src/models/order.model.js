@@ -5,7 +5,6 @@ Order data
 Output
 Order stored in database
 Fields:
-
 Order
 - id
 - userId
@@ -19,7 +18,8 @@ Order
 - createdAt
 */
 
-import { DataTypes, Model, Sequelize } from "sequelize";
+import { DataTypes, Model } from "sequelize";
+import sequelize from "../config/sequelize";
 
 const sequelize = new Sequelize({
     dialect: 'sqlite',
@@ -42,8 +42,16 @@ Order.init({
     products:{
         type: DataTypes.ARRAY,
 
-    }, 
+    },
+    totalPrice:{
+        type: DataTypes.INTEGER,
+    },
+    status:{
+        type: DataTypes.STRING
+    }
 
-})
+},{sequelize, timestamps: true});
+
+module.exports =  Order;
 
 

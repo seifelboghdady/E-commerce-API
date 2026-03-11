@@ -15,16 +15,9 @@ User
 - createdAt
 */
 
-
-
 import { hash } from "bcrypt";
-import { DataTypes, Model, Sequelize } from "sequelize";
-
-const sequelize = new Sequelize({
-    dialect:'sqlite',
-    storage: 'DataBase.sqlite',
-    logging: false,
-});
+import { DataTypes, Model} from "sequelize";
+import sequelize from "../config/sequelize";
 
 class User extends Model{}
 
@@ -51,7 +44,7 @@ User.init({
     password:{
         type: DataTypes.STRING,
         set(value){
-            this.setDataValue('password', hash(value));
+            this.setDataValue('password', hash(value, 10));
         }
     },
     role:{
@@ -59,7 +52,7 @@ User.init({
         defaultValue: 'user'
     }
     
-},{sequelize, createdAt: true});
+},{sequelize, timestamps: true});
 
-module.exports = User;
+module.exports =  User;
 
