@@ -19,30 +19,13 @@ Order
 */
 
 import { DataTypes, Model } from "sequelize";
-import sequelize from "../config/sequelize";
+import sequelize from "../config/sequelize.js";
 
-const sequelize = new Sequelize({
-    dialect: 'sqlite',
-    storage: 'Database.sqlite',
-    logging: false
-});
 
 class Order extends Model{}
 
 Order.init({
-    id:{
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
-        primaryKey: true
-    },
-    userId:{
-        type: DataTypes.INTEGER,
-        allowNull: false
-    },
-    products:{
-        type: DataTypes.ARRAY,
 
-    },
     totalPrice:{
         type: DataTypes.INTEGER,
     },
@@ -52,6 +35,6 @@ Order.init({
 
 },{sequelize, timestamps: true});
 
-module.exports =  Order;
+export default Order;
 
 

@@ -15,28 +15,25 @@ User
 - createdAt
 */
 
-import { hash } from "bcrypt";
+import bcrypt from "bcrypt";
 import { DataTypes, Model} from "sequelize";
-import sequelize from "../config/sequelize";
+import sequelize from "../config/sequelize.js";
 
 class User extends Model{}
 
 User.init({
-    id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true,
-        primaryKey: true
-    },
+
     name:{
         type: DataTypes.STRING,
         default: 'Unkown User',
         validate:{
-            min: 4
+            len:[4,50]
         }
     },
     email:{
         type: DataTypes.STRING,
         allowNull: false,
+        unique:true,
         validate:{
             isEmail: true
         }
@@ -44,7 +41,8 @@ User.init({
     password:{
         type: DataTypes.STRING,
         set(value){
-            this.setDataValue('password', hash(value, 10));
+            const hashed = bcrypt.hashSync(value, 10);
+            this.setDataValue('password', hashed);
         }
     },
     role:{
@@ -54,5 +52,5 @@ User.init({
     
 },{sequelize, timestamps: true});
 
-module.exports =  User;
+export default User;
 

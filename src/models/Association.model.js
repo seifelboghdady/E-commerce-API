@@ -1,7 +1,7 @@
-import User from './user.model';
-import Order from './order.model';
-import Product from './product.model';
-import OrderProduct from './OrderProduct.model';
+import User from './user.model.js';
+import Order from './order.model.js';
+import Product from './product.model.js';
+import OrderProduct from './OrderProduct.model.js';
 
 /*
 User hasMany Orders
@@ -20,4 +20,4 @@ Order.belongsTo(User);
 Order.belongsToMany(Product,{through: OrderProduct});
 Product.belongsToMany(Order,{through: OrderProduct});
 
-module.exports= {OrderProduct, User, Order, Product};
+export { OrderProduct, User, Order, Product };

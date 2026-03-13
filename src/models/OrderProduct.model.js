@@ -1,5 +1,5 @@
 import { DataTypes, Model } from "sequelize";
-import sequelize from "../config/sequelize";
+import sequelize from "../config/sequelize.js";
 
 
 
@@ -13,4 +13,4 @@ OrderProduct.init({
   modelName: "OrderProduct"
 });
 
-module.exports = OrderProduct;
+export default OrderProduct;
