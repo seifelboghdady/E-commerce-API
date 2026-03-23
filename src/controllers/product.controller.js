@@ -1,15 +1,8 @@
 import Product from '../models/product.model.js';
 
 export const addProduct = async (req, res)=>{
-    // const newProduct = req.body;
-    // await Product.create(newProduct);
+
     try {
-        // if (req.user.role !== "admin") {
-        //     return res.status(403).json({
-        //         success: false,
-        //         message: "Access denied"
-        //     });
-        // }
         const newProduct = req.body;
         // simple validation
         if (!newProduct.name || !newProduct.price) {
@@ -34,4 +27,66 @@ export const addProduct = async (req, res)=>{
             message: "Server Error"
         });
     }
+};
+
+//get all product
+export const getAllProduct = async (req, res)=>{
+    try {
+        
+        const allproduct = await Product.findAll(
+            {
+                attributes:['name', 'description', 'stock', 'price' ]
+            }
+        );
+        if (allproduct.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "No products found"
+            });
+        }
+        return res.status(200).json({
+            success: true,
+            data: allproduct
+        });
+    } catch (error) {
+        console.error("Error fetching products:", error);
+        return res.status(500).json({
+            success: false,
+            message: "Internal Server Error"
+        });
+    }
+};
+
+export const getProductByID = async (req, res)=>{
+    try {
+        const {id} = req.params;
+        console.log(id)
+        const product = await Product.findOne(
+            {
+                where: {id:id},
+                attributes: ['name', 'description', 'stock', 'price']
+            }
+        );
+        // const product = await Product.findByPk(id);
+
+        if (!product) {
+            return res.status(404).json({
+                success: false,
+                message: "Product not found"
+            });
+        }
+        return res.status(200).json({
+            success: true,
+            data: product
+        });
+
+    } catch (error) {
+        console.error("Error fetching product by ID:", error);
+        return res.status(500).json({
+            success: false,
+            message: "Internal Server Error"
+        });
+    }
+
+
 };
