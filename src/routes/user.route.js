@@ -3,7 +3,7 @@ import {register, login} from '../controllers/user.controller.js';
 import { Router } from 'express';
 import Validate from '../middleware/validate.js';
 import {check} from 'express-validator';
-import {auth} from '../middleware/authToken.js'
+
 
 const router = Router();
 

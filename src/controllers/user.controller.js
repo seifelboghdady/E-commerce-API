@@ -17,7 +17,7 @@ export const register =async(req, res)=>{
         });
         }
         const newuser = await User.create({ name, password, email});
-        const token = jwt.sign({id: newuser.id}, process.env.SECRET_ACCESS_TOKEN, {expiresIn: '3h'});
+        const token = jwt.sign({id: newuser.id, role:newuser.role}, process.env.SECRET_ACCESS_TOKEN, {expiresIn: '3h'});
         res.status(201).json({
             user: newuser,
             message : "user Created",

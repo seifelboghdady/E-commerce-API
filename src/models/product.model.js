@@ -26,9 +26,16 @@ Product.init({
         type: DataTypes.STRING,
         allowNull: false
     },
+    description:{
+        type: DataTypes.STRING,
+    },
     stock:{
         type: DataTypes.INTEGER,
         defaultValue: 0,
+        allowNull: false
+    },
+    price:{
+        type: DataTypes.FLOAT,
         allowNull: false
     },
     image: {
