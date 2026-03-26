@@ -1,3 +1,4 @@
+import { where } from 'sequelize';
 import Product from '../models/product.model.js';
 
 export const addProduct = async (req, res)=>{
@@ -90,3 +91,38 @@ export const getProductByID = async (req, res)=>{
 
 
 };
+
+export const updateProduct = async(req, res)=>{
+    try {
+        const {id} = req.params;
+        const updateData = req.body|| {};
+        if (Object.keys(updateData).length === 0) {
+            return res.status(400).json({
+                success: false,
+                message: "No data provided to update"
+            });
+        }
+        const [updatedProduct] = await Product.update(updateData,{
+            where:{
+                id: id
+            }
+        });
+        if (updatedProduct === 0) {
+            return res.status(404).json({
+                success: false,
+                message: "Product not found or no changes made"
+            });
+        }
+        return res.status(200).json({
+            success: true,
+            data: updatedProduct
+        });
+
+    } catch (error) {
+        console.error("Error fetching product by ID:", error);
+        return res.status(500).json({
+            success: false,
+            message: "Internal Server Error"
+        });        
+    }
+}
