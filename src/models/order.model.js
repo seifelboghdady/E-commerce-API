@@ -31,6 +31,9 @@ Order.init({
     },
     status:{
         type: DataTypes.STRING
+    },
+    quantity:{
+        type: DataTypes.INTEGER
     }
 
 },{sequelize, timestamps: true});
