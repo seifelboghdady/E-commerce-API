@@ -1,5 +1,5 @@
-import Order from "../models/order.model";
-import Product from "../models/product.model";
+import Order from "../models/order.model.js";
+import Product from "../models/product.model.js";
 import OrderProduct from "../models/OrderProduct.model.js"
 
 
@@ -26,4 +26,21 @@ export const addToCart = async (req, res)=>{
 
     res.json({ message: "Added to cart" });
 
+}
+
+export const veiwCart = async(req, res)=>{
+    try {
+        //,userId: req.user.id}
+        let product = await Order.findAll({where:{status:'cart'}});
+        return res.status(200).json({
+                success: true,
+                data: product
+            });
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            message: "An error occurred while retrieving the Cart.",
+            error: error.message
+        });
+    }
 }
