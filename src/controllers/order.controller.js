@@ -1,4 +1,4 @@
-
+import Product from"../models/product.model.js";
 import Order from "../models/order.model.js";
 
 
@@ -27,3 +27,28 @@ export const createOrder = async (req, res)=>{
     }
 
 }
+
+
+export const getCart = async (req, res) => {
+    try {
+        const userId = req.user.id;
+
+        const cart = await Order.findOne({
+            where: { UserId: userId, status: 'cart' },
+            include: [
+                {
+                    model: Product, 
+                    through: { attributes: ['quantity'] } // هات الكمية فقط من الجدول الوسيط
+                }
+            ]
+        });
+
+        if (!cart) {
+            return res.status(200).json({ success: true, message: "Cart is empty", data: [] });
+        }
+
+        res.status(200).json({ success: true, data: cart });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+};
