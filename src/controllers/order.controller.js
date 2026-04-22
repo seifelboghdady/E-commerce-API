@@ -38,7 +38,7 @@ export const getCart = async (req, res) => {
             include: [
                 {
                     model: Product, 
-                    through: { attributes: ['quantity'] } // هات الكمية فقط من الجدول الوسيط
+                    through: { attributes: ['quantity'] } 
                 }
             ]
         });
@@ -52,3 +52,15 @@ export const getCart = async (req, res) => {
         res.status(500).json({ success: false, error: error.message });
     }
 };
+
+export const getUserOrder=async(req, res)=>{
+    try {
+        
+        const UserId = req.user.id;
+        const orders = await Order.findAll({where:{UserId:UserId}});
+        res.status(200).json({ success: true, data: orders });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+
+}
