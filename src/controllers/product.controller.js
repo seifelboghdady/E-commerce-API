@@ -33,9 +33,15 @@ export const addProduct = async (req, res)=>{
 //get all product
 export const getAllProduct = async (req, res)=>{
     try {
-        
+        const page = req.query.page || 1;
+        const limit = req.query.page || 10;
+
+        const offset = (page-1)*limit;
+
         const allproduct = await Product.findAll(
             {
+                limit: limit,
+                offset: offset,
                 attributes:['name', 'description', 'stock', 'price' ]
             }
         );
