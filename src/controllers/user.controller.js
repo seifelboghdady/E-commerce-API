@@ -16,8 +16,14 @@ export const register =async(req, res)=>{
             message:"Email already exists"
         });
         }
-        const newuser = await User.create({ name, password, email});
-        const token = jwt.sign({id: newuser.id, role:newuser.role}, process.env.SECRET_ACCESS_TOKEN, {expiresIn: '3h'});
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        const newuser = await User.create({
+            name,
+            email,
+            password: hashedPassword
+        });
+                const token = jwt.sign({id: newuser.id, role:newuser.role}, process.env.SECRET_ACCESS_TOKEN, {expiresIn: '3h'});
         res.status(201).json({
             user: newuser,
             message : "user Created",
@@ -26,8 +32,7 @@ export const register =async(req, res)=>{
     
     }catch(err){
         res.status(500).json({
-            message: err.message,
-            sql: err.parent?.message
+            message: err.message
         });
     }
 }
@@ -36,10 +41,10 @@ export const register =async(req, res)=>{
 export const login = async(req, res)=>{
     try {
         const {email, password} = req.body;
-        if(!email|!password)
+        if(!email || !password)
             throw new Error("please enter Email or password");
 
-        const user = await User.findOne({email});
+        const user = await User.findOne({ where: { email } });
 
         if(!user)
             throw new Error("please you need to register first");
@@ -54,8 +59,7 @@ export const login = async(req, res)=>{
             
     } catch (error) {
             res.status(500).json({
-                message: err.message,
-                sql: err.parent?.message
+                message: error.message
             });
     }
 }
