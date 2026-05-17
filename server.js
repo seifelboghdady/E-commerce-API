@@ -7,9 +7,11 @@ import { cartRouter } from './src/routes/cart.route.js';
 import { orderRouter } from './src/routes/order.route.js';
 import {swaggerSpec} from './src/Docs/swagger.js'
 import swaggerUi from "swagger-ui-express";
+import cors from "cors";
 
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 app.use(routerproduct);
 app.use(router);

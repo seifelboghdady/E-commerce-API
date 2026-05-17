@@ -45,6 +45,7 @@ export const getAllProduct = async (req, res)=>{
                 attributes:['name', 'description', 'stock', 'price' ]
             }
         );
+        
         if (allproduct.length === 0) {
             return res.status(404).json({
                 success: false,
@@ -67,7 +68,7 @@ export const getAllProduct = async (req, res)=>{
 export const getProductByID = async (req, res)=>{
     try {
         const {id} = req.params;
-        console.log(id)
+        // console.log(id)
         const product = await Product.findOne(
             {
                 where: {id:id},

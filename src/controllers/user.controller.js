@@ -16,14 +16,15 @@ export const register =async(req, res)=>{
             message:"Email already exists"
         });
         }
-        const hashedPassword = await bcrypt.hash(password, 10);
+        // const hashedPassword = await bcrypt.hash(password, 10);
 
         const newuser = await User.create({
             name,
             email,
-            password: hashedPassword
+            password
         });
-                const token = jwt.sign({id: newuser.id, role:newuser.role}, process.env.SECRET_ACCESS_TOKEN, {expiresIn: '3h'});
+
+        const token = jwt.sign({id: newuser.id, role:newuser.role}, process.env.SECRET_ACCESS_TOKEN, {expiresIn: '3h'});
         res.status(201).json({
             user: newuser,
             message : "user Created",
@@ -49,13 +50,20 @@ export const login = async(req, res)=>{
         if(!user)
             throw new Error("please you need to register first");
 
+        // console.log("Entered Password:", password);
+        // console.log("Stored Hash:", user.password);
         const passwordVaild = await bcrypt.compare(password, user.password);
+        // console.log("Compare Result:", passwordVaild);
         if (!passwordVaild)
             return res.status(401).json("Invalid email or password. Please try again with the correct credentials.");
         
 
         const token = jwt.sign({id: user.id}, process.env.SECRET_ACCESS_TOKEN, {expiresIn: '3h'});
-        res.json({message: "User login",token});
+        res.status(200).json({
+            message: "User login",
+            token,
+            user
+        });
             
     } catch (error) {
             res.status(500).json({
