@@ -56,19 +56,54 @@ export const addToCart = async (req, res)=>{
     }
     }
 
-export const veiwCart = async(req, res)=>{
-    try {
-        //,userId: req.user.id}
-        let product = await Order.findAll({where:{status:'cart'}});
-        return res.status(200).json({
-                success: true,
-                data: product
-            });
-    } catch (error) {
-        return res.status(500).json({
-            success: false,
-            message: "An error occurred while retrieving the Cart.",
-            error: error.message
-        });
-    }
+// export const veiwCart = async(req, res)=>{
+//     try {
+//         //,userId: req.user.id}
+//         let product = await Order.findAll({where:{status:'cart'}});
+//         return res.status(200).json({
+//                 success: true,
+//                 data: product
+//             });
+//     } catch (error) {
+//         return res.status(500).json({
+//             success: false,
+//             message: "An error occurred while retrieving the Cart.",
+//             error: error.message
+//         });
+//     }
+// }
+
+export const veiwCart = async (req, res) => {
+  try {
+
+    const cart = await Order.findOne({
+      where: {
+        UserId: req.user.id,
+        status: 'cart'
+      },
+
+      include: [
+        {
+          model: Product,
+          through: {
+            attributes: ['quantity']
+          }
+        }
+      ]
+    });
+
+    return res.status(200).json({
+      success: true,
+      data: cart
+    });
+
+  } catch (error) {
+
+    return res.status(500).json({
+      success: false,
+      message: "An error occurred while retrieving the Cart.",
+      error: error.message
+    });
+
+  }
 }

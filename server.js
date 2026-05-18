@@ -8,8 +8,13 @@ import { orderRouter } from './src/routes/order.route.js';
 import {swaggerSpec} from './src/Docs/swagger.js'
 import swaggerUi from "swagger-ui-express";
 import cors from "cors";
+import path from "path";
+import { fileURLToPath } from "url";
 
 const app = express();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 app.use(cors());
 app.use(express.json());
@@ -22,16 +27,10 @@ await sequelize.sync();
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
+app.use(express.static(path.join(__dirname, "public")));
 
-app.listen(3000, () => {
-    console.log('Server running on http://localhost:3000');
+app.listen(3000, '0.0.0.0', () => {
+  console.log('Server running');
 });
-/*
-{
-  "name": "Seif",
-  "email": "seif@mail.com",
-  "password": "123456"
-}
-*/
 
 

@@ -33,16 +33,38 @@ export const addProduct = async (req, res)=>{
 //get all product
 export const getAllProduct = async (req, res)=>{
     try {
-        const page = req.query.page || 1;
-        const limit = req.query.page || 10;
+        const page  = Number(req.query.page) || 1;
+        const limit = Number(req.query.limit) || 10;
 
-        const offset = (page-1)*limit;
+        const offset = (page - 1) * limit;
 
         const allproduct = await Product.findAll(
             {
                 limit: limit,
                 offset: offset,
-                attributes:['name', 'description', 'stock', 'price' ]
+                attributes:[
+
+                'id',
+
+                ['name', 'title'],
+
+                'description',
+                'stock',
+                'price',
+                'oldPrice',
+                'author',
+                'category',
+                'rating',
+                'reviews',
+                'publisher',
+                'year',
+                'pages',
+                'language',
+                'isbn',
+                'isNew'
+
+                ]
+                
             }
         );
         
@@ -72,7 +94,28 @@ export const getProductByID = async (req, res)=>{
         const product = await Product.findOne(
             {
                 where: {id:id},
-                attributes: ['name', 'description', 'stock', 'price']
+                attributes:[
+
+                'id',
+
+                ['name', 'title'],
+
+                'description',
+                'stock',
+                'price',
+                'oldPrice',
+                'author',
+                'category',
+                'rating',
+                'reviews',
+                'publisher',
+                'year',
+                'pages',
+                'language',
+                'isbn',
+                'isNew'
+
+                ]
             }
         );
         // const product = await Product.findByPk(id);
