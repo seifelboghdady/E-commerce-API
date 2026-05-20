@@ -8,14 +8,13 @@ import { orderRouter } from './src/routes/order.route.js';
 import {swaggerSpec} from './src/Docs/swagger.js'
 import swaggerUi from "swagger-ui-express";
 import cors from "cors";
-import path from "path";
-import { fileURLToPath } from "url";
+
 
 const app = express();
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
+
+app.use('/uploads', express.static('src/uploads'));
 app.use(cors());
 app.use(express.json());
 app.use(routerproduct);
@@ -27,10 +26,18 @@ await sequelize.sync();
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-app.use(express.static(path.join(__dirname, "public")));
-
-app.listen(3000, '0.0.0.0', () => {
-  console.log('Server running');
+app.get('/', (req, res) => {
+  res.send('Backend Working');
 });
 
+try {
+  await sequelize.sync();
+
+  app.listen(3000, '0.0.0.0', () => {
+    console.log('Server running');
+  });
+
+} catch (err) {
+  console.log(err);
+}
 

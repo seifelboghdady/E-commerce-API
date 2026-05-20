@@ -72,4 +72,146 @@ export const login = async(req, res)=>{
     }
 }
 
-//export {register};
+// export const updateprofile= async(req, res)=>{
+
+//     try {
+//         const id = req.user.id;
+//         const allowedFields = ["name","phone","city"];
+//         const updatedData ={};
+    
+//         allowedFields.forEach((field)=>{
+//             if (req.body[field] !== undefined) {
+//                 updatedData[field] = req.body[field];
+//             }
+//         });
+//         if (req.file) {
+//             updatedData.image = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
+//         }
+//         await User.update(updatedData,{
+//             where:{id}
+//         })
+//         return res.status(200).json({
+//             message: "Profile updated successfully",
+//             data: updatedUser
+//         });
+//     } catch (error) {
+//         res.status(500).json({
+//             message: error.message
+//         });
+//     }
+
+// };
+
+// export const updatedPassword= async(req, res)=>{
+//     try {
+//         const user = await User.findByPk(req.user.id);
+//         const isMatch = await bcrypt.compare(
+//             req.body.oldPassword,
+//             user.password
+//         );
+    
+//         if (!isMatch) {
+//             return res.status(400).json({
+//                 message: "Old password is incorrect"
+//             });
+//         }
+//         const hashedPassword = await bcrypt.hash(
+//             req.body.newPassword,
+//             10
+//         );
+//         await user.update({
+//             password: hashedPassword
+//         });
+//         res.status(200).json({
+//                 message: "Update Complete succful",
+//         });
+        
+//     } catch (error) {
+//         res.status(500).json({
+//             message: error.message
+//         });        
+//     }
+// }
+
+export const updateprofile = async (req, res) => {
+    try {
+        const id = req.user.id;
+        const allowedFields = ["name", "phone", "city"];
+        const updatedData = {};
+
+        allowedFields.forEach((field) => {
+            if (req.body[field] !== undefined) {
+                updatedData[field] = req.body[field];
+            }
+        });
+
+        if (req.file) {
+            updatedData.image = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
+        }
+
+        // 1. تحديث البيانات في قاعدة البيانات
+        await User.update(updatedData, {
+            where: { id }
+        });
+
+        // 2. جلب كائن المستخدم الجديد المحدث بالكامل لإرساله للفرونت إند
+        const updatedUser = await User.findByPk(id, {
+            attributes: { exclude: ['password'] } // حماية الباسورد من الإرسال
+        });
+
+        // 3. الإرسال بنجاح
+        return res.status(200).json({
+            message: "Profile updated successfully",
+            data: updatedUser // الآن المتغير معرف ويحتوي على البيانات الجديدة ✓
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        });
+    }
+};
+
+export const updatedPassword = async (req, res) => {
+    try {
+        const user = await User.findByPk(req.user.id);
+        
+        // دعم المسميين (currentPassword القادم من الفرونت أو oldPassword) لضمان عدم حدوث تعارض
+        const oldPasswordInput = req.body.currentPassword || req.body.oldPassword;
+
+        if (!oldPasswordInput) {
+            return res.status(400).json({
+                message: "Old password is required"
+            });
+        }
+
+        const isMatch = await bcrypt.compare(
+            oldPasswordInput,
+            user.password
+        );
+
+        if (!isMatch) {
+            return res.status(400).json({
+                message: "Old password is incorrect"
+            });
+        }
+
+        const hashedPassword = await bcrypt.hash(
+            req.body.newPassword,
+            10
+        );
+
+        await user.update({
+            password: hashedPassword
+        });
+
+        return res.status(200).json({
+            message: "Update Complete successful",
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message
+        });
+    }
+};

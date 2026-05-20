@@ -1,8 +1,10 @@
 
-import {register, login} from '../controllers/user.controller.js';
+import {register, login, updateprofile, updatedPassword} from '../controllers/user.controller.js';
 import { Router } from 'express';
 import Validate from '../middleware/validate.js';
 import {check} from 'express-validator';
+import { auth } from '../middleware/authToken.js';
+import upload from '../middleware/upload.js';
 
 
 const router = Router();
@@ -84,6 +86,8 @@ router.post('/api/auth/login',
     Validate,
     login 
 );
+router.put('/api/profile', auth,  upload.single('image'),  Validate,  updateprofile);
+router.put('/api/profile/password', auth, Validate, updatedPassword);
 
 
 export {router};

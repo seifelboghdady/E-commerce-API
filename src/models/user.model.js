@@ -48,6 +48,10 @@ User.init({
     role:{
         type: DataTypes.ENUM("user", "admin"),
         defaultValue: 'user'
+    },
+    image: {
+        type: DataTypes.STRING,
+        allowNull: true
     }
     
 },{sequelize, timestamps: true});
