@@ -52,8 +52,8 @@ export const addToCart = async (req, res)=>{
         success: false,
         message: "Internal Server Error",
         error: error.message
-    });
-    }
+        });
+      }
     }
 
 // export const veiwCart = async(req, res)=>{
