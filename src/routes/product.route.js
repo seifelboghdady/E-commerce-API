@@ -1,4 +1,5 @@
 import {auth} from '../middleware/authToken.js'
+import upload from '../middleware/upload.js'
 import { Router } from 'express';
 import { addProduct, deleteProduct, getAllProduct, getProductByID, updateProduct } from '../controllers/product.controller.js';
 const routerproduct = Router();
@@ -84,7 +85,7 @@ const routerproduct = Router();
 
 
 routerproduct
-    .post('/api/products',auth,addProduct)
+    .post('/api/products',auth,upload.single('image'),addProduct)
     .get('/api/products',auth,getAllProduct)
     .get('/api/products/:id',auth,getProductByID)
     .put('/api/products/:id', auth, updateProduct)

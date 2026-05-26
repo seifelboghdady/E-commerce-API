@@ -26,9 +26,6 @@ await sequelize.sync();
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-app.get('/', (req, res) => {
-  res.send('Backend Working');
-});
 
 try {
   await sequelize.sync();

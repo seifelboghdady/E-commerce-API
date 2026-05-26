@@ -4,6 +4,9 @@ import Product from '../models/product.model.js';
 export const addProduct = async (req, res)=>{
 
     try {
+        const imagePath = req.file
+      ? `uploads/${req.file.filename}`
+      : null;
         const newProduct = req.body;
         // simple validation
         if (!newProduct.name || !newProduct.price) {
@@ -103,7 +106,7 @@ export const getProductByID = async (req, res)=>{
                 'id',
 
                 ['name', 'title'],
-
+                'image',
                 'description',
                 'stock',
                 'price',
