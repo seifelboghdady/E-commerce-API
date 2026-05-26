@@ -16,7 +16,7 @@ export const addProduct = async (req, res)=>{
             });
         }
 
-        const product = await Product.create(newProduct);
+        const product = await Product.create({...newProduct, image: imagePath});
 
         res.status(201).json({
             success: true,
