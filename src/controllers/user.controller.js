@@ -146,7 +146,7 @@ export const updateprofile = async (req, res) => {
         });
 
         if (req.file) {
-            updatedData.image = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
+            updatedData.image = `uploads/${req.file.filename}`;
         }
 
         // 1. تحديث البيانات في قاعدة البيانات
